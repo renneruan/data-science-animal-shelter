@@ -24,6 +24,7 @@ class DataCollector:
             os.makedirs(self.data_path)
 
     def get_data(self):
+        complete_data = []
         while True:
             print(f"Getting {self.path_prefix} data from position: {self.position}")
             complete_url = self.url + f"$limit={self.limit}&$offset={self.position}"
@@ -35,15 +36,17 @@ class DataCollector:
                 if len(data) == 0:
                     break
 
-                data_json_path = f"{self.data_path}/{self.position}.json"
+                complete_data.append(data)
 
-                with open(data_json_path, "w") as open_file:
-                    json.dump(data, open_file)
             else:
                 print(resp)
                 break
 
             self.position += self.limit
+
+        data_json_path = f"{self.data_path}.json"
+        with open(data_json_path, "w") as open_file:
+            json.dump(complete_data, open_file)
 
 
 if __name__ == "__main__":
